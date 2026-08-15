@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyber">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SYSTEM_LIMIT_/</title>
+  <meta name="theme-color" content="#050206">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root[data-theme="cyber"] {
+      --bg: #050206;
+      --bg-gradient: radial-gradient(circle at 50% 15%, rgba(255, 13, 60, 0.22) 0%, transparent 60%),
+                     radial-gradient(circle at 80% 80%, rgba(120, 0, 30, 0.18) 0%, transparent 50%);
+      --card-bg: rgba(22, 10, 16, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-top: rgba(255, 255, 255, 0.18);
+      --text: #ffffff;
+      --text-sub: #a894a0;
+      --accent: #ff1a43;
+      --accent-gradient: linear-gradient(135deg, #ff2a55 0%, #ba0029 100%);
+      --accent-glow: rgba(255, 26, 67, 0.45);
+    }
+    :root[data-theme="matrix"] {
+      --bg: #020804;
+      --bg-gradient: radial-gradient(circle at 50% 15%, rgba(0, 255, 65, 0.18) 0%, transparent 60%),
+                     radial-gradient(circle at 80% 80%, rgba(0, 100, 30, 0.15) 0%, transparent 50%);
+      --card-bg: rgba(6, 22, 10, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-top: rgba(255, 255, 255, 0.18);
+      --text: #ffffff;
+      --text-sub: #82a88c;
+      --accent: #00ff41;
+      --accent-gradient: linear-gradient(135deg, #00ff55 0%, #008f24 100%);
+      --accent-glow: rgba(0, 255, 65, 0.45);
+    }
+    :root[data-theme="synthwave"] {
+      --bg: #06020e;
+      --bg-gradient: radial-gradient(circle at 50% 15%, rgba(217, 0, 255, 0.2) 0%, transparent 60%),
+                     radial-gradient(circle at 80% 80%, rgba(90, 0, 140, 0.18) 0%, transparent 50%);
+      --card-bg: rgba(20, 8, 30, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-top: rgba(255, 255, 255, 0.18);
+      --text: #ffffff;
+      --text-sub: #aa8cb8;
+      --accent: #d900ff;
+      --accent-gradient: linear-gradient(135deg, #e333ff 0%, #8800a3 100%);
+      --accent-glow: rgba(217, 0, 255, 0.45);
+    }
+    :root[data-theme="steel"] {
+      --bg: #03070d;
+      --bg-gradient: radial-gradient(circle at 50% 15%, rgba(0, 162, 255, 0.2) 0%, transparent 60%),
+                     radial-gradient(circle at 80% 80%, rgba(0, 60, 130, 0.18) 0%, transparent 50%);
+      --card-bg: rgba(10, 18, 28, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-top: rgba(255, 255, 255, 0.18);
+      --text: #ffffff;
+      --text-sub: #829cb8;
+      --accent: #00a2ff;
+      --accent-gradient: linear-gradient(135deg, #33b5ff 0%, #0066cc 100%);
+      --accent-glow: rgba(0, 162, 255, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+    
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      overscroll-behavior-y: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+      display: flex;
+      justify-content: center;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    input, select, textarea {
+      user-select: text;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      padding: 20px 18px;
+      margin: 0 auto;
+    }
+    
+    .screen { display: none; }
+    .screen.active { 
+      display: block; 
+      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-top: 8px;
+    }
+    .system-title { 
+      font-size: 0.7rem; 
+      font-weight: 700;
+      color: var(--accent); 
+      letter-spacing: 2px; 
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+    h1 { 
+      font-size: 1.6rem; 
+      font-weight: 800; 
+      letter-spacing: -0.5px; 
+      color: #fff; 
+      text-shadow: 0 0 16px var(--accent-glow); 
+      margin-top: 2px;
+    }
+    
+    .header-actions { display: flex; gap: 10px; }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border-top);
+      color: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+    }
+    .icon-btn:active { transform: scale(0.92); }
+
+    .habit-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-top: 1px solid var(--card-border-top);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 18px;
+      position: relative;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .habit-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .habit-info { display: flex; align-items: center; gap: 14px; cursor: pointer; flex: 1; }
+    .habit-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.4));
+      color: var(--accent);
+      flex-shrink: 0;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    }
+    .habit-name { 
+      font-size: 1.05rem; 
+      font-weight: 700; 
+      letter-spacing: -0.2px; 
+      color: #fff;
+    }
+    .habit-desc { font-size: 0.78rem; color: var(--text-sub); margin-top: 2px; }
+
+    .streak-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 10px;
+      border-radius: 20px;
+      color: var(--accent);
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    .check-btn {
+      width: 46px;
+      height: 46px;
+      min-width: 46px;
+      min-height: 46px;
+      padding: 0;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .check-btn i, .check-btn svg {
+      width: 22px;
+      height: 22px;
+    }
+    .check-btn:active { transform: scale(0.88); }
+    .check-btn.completed {
+      background: var(--accent-gradient);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+    .check-btn.disabled {
+      border-color: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.15);
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    .grid-wrapper {
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .grid-wrapper::-webkit-scrollbar { display: none; }
+    
+    .grid-container {
+      display: grid;
+      grid-template-rows: repeat(7, 1fr);
+      grid-auto-flow: column;
+      gap: 5px;
+      width: max-content;
+    }
+    .cell {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .cell.off-day { opacity: 0.15; }
+    .cell.today-cell { border: 1px solid rgba(255, 255, 255, 0.6); }
+    .cell.active {
+      background-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .form-group { margin-bottom: 22px; }
+    label { 
+      display: block; 
+      font-size: 0.72rem; 
+      color: var(--text-sub); 
+      margin-bottom: 10px; 
+      letter-spacing: 1.2px; 
+      font-weight: 700; 
+      text-transform: uppercase;
+    }
+    input[type="text"], select {
+      width: 100%;
+      min-height: 50px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border-top);
+      border-radius: 16px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.2s ease;
+    }
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .days-picker { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .day-btn {
+      min-height: 44px; 
+      background: rgba(255, 255, 255, 0.04); 
+      border: 1px solid var(--card-border);
+      border-radius: 12px; 
+      color: var(--text-sub); 
+      font-family: inherit; 
+      font-size: 0.75rem; 
+      font-weight: 700; 
+      cursor: pointer; 
+      text-align: center;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .day-btn.selected { 
+      border-color: var(--accent); 
+      color: #fff; 
+      background: var(--accent-gradient);
+      box-shadow: 0 4px 14px var(--accent-glow); 
+    }
+
+    .color-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .color-option { aspect-ratio: 1; min-height: 42px; border-radius: 14px; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s ease; }
+    .color-option:active { transform: scale(0.9); }
+    .color-option.selected { border-color: #fff; box-shadow: 0 0 16px #fff; }
+
+    .icon-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .icon-option {
+      aspect-ratio: 1; 
+      min-height: 46px; 
+      background: rgba(255, 255, 255, 0.04); 
+      border: 1px solid var(--card-border); 
+      border-radius: 14px;
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: var(--text-sub); 
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .icon-option.selected { 
+      border-color: var(--accent); 
+      color: #fff; 
+      background: rgba(255, 255, 255, 0.1); 
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .more-icons-btn, .action-btn-secondary {
+      width: 100%; 
+      min-height: 46px; 
+      padding: 10px; 
+      background: rgba(255, 255, 255, 0.03); 
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      color: var(--text-sub); 
+      font-family: inherit; 
+      font-size: 0.82rem; 
+      font-weight: 700; 
+      letter-spacing: 0.5px; 
+      cursor: pointer; 
+      border-radius: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      width: 100%; 
+      min-height: 52px; 
+      padding: 14px; 
+      background: var(--accent-gradient); 
+      border: none; 
+      border-radius: 999px;
+      color: #fff; 
+      font-family: inherit; 
+      font-size: 0.95rem; 
+      font-weight: 800; 
+      letter-spacing: 0.5px; 
+      cursor: pointer; 
+      box-shadow: 0 10px 28px var(--accent-glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-primary:active { transform: scale(0.97); }
+
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+      background: rgba(0, 0, 0, 0.75); 
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: none; 
+      align-items: flex-end; 
+      z-index: 100;
+      animation: fadeIn 0.2s ease;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: rgba(18, 10, 16, 0.9);
+      width: 100%; 
+      border-radius: 28px 28px 0 0; 
+      padding: 28px 22px calc(24px + env(safe-area-inset-bottom, 0px));
+      border: 1px solid var(--card-border-top); 
+      border-bottom: none; 
+      max-height: 85vh; 
+      overflow-y: auto; 
+      -webkit-overflow-scrolling: touch;
+      box-shadow: 0 -20px 40px rgba(0,0,0,0.8);
+    }
+    .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+    .action-btn {
+      min-height: 48px; 
+      padding: 10px; 
+      background: rgba(255, 255, 255, 0.05); 
+      border: 1px solid var(--card-border-top); 
+      color: #fff; 
+      font-family: inherit; 
+      font-size: 0.85rem; 
+      font-weight: 700;
+      cursor: pointer; 
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 16px; }
+    .cal-day {
+      aspect-ratio: 1; 
+      min-height: 42px; 
+      background: rgba(255, 255, 255, 0.03); 
+      border: 1px solid var(--card-border); 
+      border-radius: 12px;
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 0.85rem; 
+      font-weight: 700;
+      cursor: pointer; 
+      color: var(--text-sub);
+      transition: all 0.2s ease;
+    }
+    .cal-day.selected { 
+      border-color: var(--accent); 
+      color: #fff; 
+      background: var(--accent-gradient);
+      box-shadow: 0 6px 16px var(--accent-glow); 
+    }
+
+    .nav-bar {
+      position: fixed; 
+      bottom: 0; 
+      left: 0; 
+      right: 0; 
+      background: rgba(10, 4, 8, 0.75); 
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex; 
+      justify-content: space-around; 
+      padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); 
+      z-index: 90;
+      backdrop-filter: blur(24px); 
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .nav-item {
+      background: none; 
+      border: none; 
+      color: var(--text-sub); 
+      font-family: inherit; 
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 5px; 
+      cursor: pointer; 
+      flex: 1; 
+      padding: 4px 0;
+      transition: color 0.2s ease;
+    }
+    .nav-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
+
+    .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .theme-card {
+      min-height: 52px; 
+      padding: 14px; 
+      border: 1px solid var(--card-border); 
+      background: rgba(255, 255, 255, 0.04); 
+      border-radius: 16px; 
+      cursor: pointer; 
+      text-align: center; 
+      font-size: 0.82rem; 
+      font-weight: 700;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .theme-card.selected { border-color: var(--accent); color: var(--accent); background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 16px var(--accent-glow); }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  
+  <div id="screen-home" class="screen active">
+    <header>
+      <div>
+        <div class="system-title">OVERRIDE PROTOCOL</div>
+        <h1>SYSTEM_LIMIT_/</h1>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="switchScreen('screen-settings')"><i data-lucide="settings"></i></button>
+        <button class="icon-btn" onclick="openAddHabit()"><i data-lucide="plus"></i></button>
+      </div>
+    </header>
+    <div id="habits-container"></div>
+  </div>
+
+  <div id="screen-edit" class="screen">
+    <header>
+      <button class="icon-btn" onclick="switchScreen('screen-home')"><i data-lucide="x"></i></button>
+      <h1 id="edit-screen-title">NEW LIMIT</h1>
+      <div style="width: 44px;"></div>
+    </header>
+    
+    <div class="form-group">
+      <label>Habit Name</label>
+      <input type="text" id="habit-name-input" placeholder="e.g. CODING / RUNNING">
+    </div>
+
+    <div class="form-group">
+      <label>Description / Goal</label>
+      <input type="text" id="habit-desc-input" placeholder="e.g. 30 minutes daily">
+    </div>
+
+    <div class="form-group">
+      <label>Schedule (Days)</label>
+      <div class="days-picker" id="days-picker"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Signal Color</label>
+      <div class="color-grid" id="color-picker"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Module Icon</label>
+      <div class="icon-grid" id="icon-picker"></div>
+      <button type="button" class="more-icons-btn" style="margin-top:12px;" onclick="openIconSearchModal()">+ MORE ICONS</button>
+    </div>
+
+    <button class="btn-primary" onclick="saveHabit()">EXECUTE SAVE</button>
+  </div>
+
+  <div id="screen-calendar" class="screen">
+    <header>
+      <div>
+        <div class="system-title">LOG HISTORY</div>
+        <h1>SYSTEM LOGS</h1>
+      </div>
+    </header>
+
+    <div class="form-group" style="margin-bottom: 14px;">
+      <input type="text" id="history-search-input" placeholder="Search habits..." oninput="renderCalendar()">
+    </div>
+
+    <div style="color: var(--text-sub); font-size: 0.75rem; font-weight: 700; margin-bottom: 8px;" id="selected-cal-date">SELECT DATE</div>
+    <div class="calendar-grid" id="calendar-days"></div>
+    <div style="margin-top: 22px;" id="calendar-habits-list"></div>
+  </div>
+
+  <div id="screen-settings" class="screen">
+    <header>
+      <button class="icon-btn" onclick="switchScreen('screen-home')"><i data-lucide="arrow-left"></i></button>
+      <h1>DASHBOARD CFG</h1>
+      <div style="width: 44px;"></div>
+    </header>
+
+    <div class="form-group">
+      <label>Application Theme</label>
+      <div class="theme-grid">
+        <div class="theme-card" id="theme-cyber" onclick="setTheme('cyber')">CYBER RED</div>
+        <div class="theme-card" id="theme-matrix" onclick="setTheme('matrix')">MATRIX GREEN</div>
+        <div class="theme-card" id="theme-synthwave" onclick="setTheme('synthwave')">SYNTHWAVE</div>
+        <div class="theme-card" id="theme-steel" onclick="setTheme('steel')">STEEL BLUE</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Notifications</label>
+      <button class="action-btn-secondary" onclick="requestNotificationPermission()">ENABLE NOTIFICATIONS</button>
+    </div>
+
+    <div class="form-group">
+      <label>Privacy & Backup (100% Local)</label>
+      <div style="display: flex; gap: 10px;">
+        <button class="action-btn" style="flex:1;" onclick="exportData()">EXPORT JSON</button>
+        <button class="action-btn" style="flex:1;" onclick="importData()">IMPORT JSON</button>
+      </div>
+      <input type="file" id="import-file-input" style="display:none;" onchange="handleImportFile(event)">
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="action-modal">
+    <div class="modal">
+      <div id="modal-habit-title" style="font-size: 1.2rem; font-weight: 800; letter-spacing: -0.2px; color: var(--accent);"></div>
+      <div id="modal-habit-desc" style="color: var(--text-sub); font-size: 0.8rem; margin-top: 4px;"></div>
+      
+      <div class="modal-actions">
+        <button class="action-btn" id="modal-exec-btn" onclick="toggleTodayModal()">EXECUTE TODAY</button>
+        <button class="action-btn" onclick="shareHabitCard()">SHARE CARD</button>
+        <button class="action-btn" onclick="editCurrentHabit()">EDIT</button>
+        <button class="action-btn" style="color: var(--accent); border-color: rgba(255, 26, 67, 0.4);" onclick="deleteCurrentHabit()">DELETE</button>
+      </div>
+      <button class="btn-primary" style="background: rgba(255,255,255,0.08); color: #fff; margin-top: 14px; border: 1px solid var(--card-border-top); box-shadow: none;" onclick="closeModal()">CANCEL</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="icon-search-modal">
+    <div class="modal">
+      <div style="font-size: 1rem; font-weight: 800; color: var(--accent); margin-bottom: 14px;">SEARCH ALL ICONS</div>
+      <input type="text" id="icon-search-input" placeholder="Type icon name (e.g. dumbbell, code, run)..." oninput="filterAllIcons()">
+      <div class="icon-grid" id="all-icons-grid" style="margin-top: 18px; max-height: 250px; overflow-y: auto;"></div>
+      <button class="btn-primary" style="background: rgba(255,255,255,0.08); color: #fff; margin-top: 18px; border: 1px solid var(--card-border-top); box-shadow: none;" onclick="closeIconSearchModal()">CLOSE</button>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <button class="nav-item active" onclick="switchScreen('screen-home', this)">
+      <i data-lucide="layout-grid" style="width:22px; height:22px;"></i> DASHBOARD
+    </button>
+    <button class="nav-item" onclick="switchScreen('screen-calendar', this)">
+      <i data-lucide="calendar" style="width:22px; height:22px;"></i> HISTORY
+    </button>
+  </nav>
+
+</div>
+
+<canvas id="share-canvas" style="display:none;"></canvas>
+
+<script>
+  const weekDays = [
+    { id: 1, label: 'MON' }, { id: 2, label: 'TUE' }, { id: 3, label: 'WED' },
+    { id: 4, label: 'THU' }, { id: 5, label: 'FRI' }, { id: 6, label: 'SAT' }, { id: 0, label: 'SUN' }
+  ];
+
+  const availableColors = [
+    '#ff1a43', '#ff5500', '#ff00a0', '#9d00ff', '#00ffcc',
+    '#00e5ff', '#0088ff', '#00ff66', '#a6ff00', '#ffcc00'
+  ];
+
+  const quickIcons = [
+    'flame', 'footprints', 'swords', 'trophy', 'activity',
+    'terminal', 'code', 'cpu', 'brain', 'book-open',
+    'palette', 'pen-tool', 'image', 'layers', 'sparkles',
+    'heart-pulse', 'moon', 'droplet', 'sun', 'shield-check',
+    'zap', 'target', 'clock', 'crosshair', 'check-square'
+  ];
+
+  const defaultHabits = [];
+
+  let habits = JSON.parse(localStorage.getItem('cyber_habits')) || defaultHabits;
+  let historyStore = JSON.parse(localStorage.getItem('cyber_history')) || {};
+  let currentTheme = localStorage.getItem('cyber_theme') || 'cyber';
+
+  let selectedHabitId = null;
+  let selectedColor = availableColors[0];
+  let selectedIcon = 'zap';
+  let selectedDays = [1,2,3,4,5,6,0];
+  let editingHabitId = null;
+  let activeCalDate = new Date().toISOString().split('T')[0];
+
+  function formatDate(d) { return d.toISOString().split('T')[0]; }
+  const todayObj = new Date();
+  const todayStr = formatDate(todayObj);
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+    const activeCard = document.getElementById(`theme-${theme}`);
+    if (activeCard) activeCard.classList.add('selected');
+    localStorage.setItem('cyber_theme', theme);
+  }
+  applyTheme(currentTheme);
+
+  function setTheme(t) { applyTheme(t); }
+
+  function refreshIcons() {
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function switchScreen(screenId, btn) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    
+    if (btn) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    if (screenId === 'screen-calendar') renderCalendar();
+    refreshIcons();
+    window.scrollTo(0, 0);
+  }
+
+  function isHabitScheduledForDate(habit, dateObj) {
+    const targetDay = dateObj.getDay();
+    const habitDays = habit.days || [1,2,3,4,5,6,0];
+    return habitDays.includes(targetDay);
+  }
+
+  function calculateStreak(habitId) {
+    const habit = habits.find(h => h.id === habitId);
+    if (!habit) return 0;
+    
+    let streak = 0;
+    let d = new Date();
+    let dStr = formatDate(d);
+    
+    let doneToday = historyStore[habitId] && historyStore[habitId][dStr];
+    if (!doneToday) {
+      d.setDate(d.getDate() - 1);
+    }
+    
+    for (let i = 0; i < 365; i++) {
+      dStr = formatDate(d);
+      if (isHabitScheduledForDate(habit, d)) {
+        if (historyStore[habitId] && historyStore[habitId][dStr]) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+      d.setDate(d.getDate() - 1);
+    }
+    return streak;
+  }
+
+  function renderHome() {
+    const container = document.getElementById('habits-container');
+    container.innerHTML = '';
+    
+    habits.forEach(habit => {
+      const card = document.createElement('div');
+      card.className = 'habit-card';
+
+      const isDone = historyStore[habit.id] && historyStore[habit.id][todayStr];
+      const isScheduledToday = isHabitScheduledForDate(habit, todayObj);
+      const streak = calculateStreak(habit.id);
+
+      const checkIcon = !isScheduledToday ? 'square' : (isDone ? 'check-square' : 'square');
+
+      card.innerHTML = `
+        <div class="habit-top">
+          <div class="habit-info" onclick="openModal('${habit.id}')">
+            <div class="habit-icon" style="color: ${habit.color || 'var(--accent)'}"><i data-lucide="${habit.icon || 'zap'}"></i></div>
+            <div>
+              <div class="habit-name">${habit.name}</div>
+              <div class="habit-desc">${habit.desc || ''}</div>
+              <div class="streak-badge"><i data-lucide="flame" style="width:12px;height:12px;"></i> ${streak} STREAK</div>
+            </div>
+          </div>
+          <button class="check-btn ${!isScheduledToday ? 'disabled' : (isDone ? 'completed' : '')}" 
+                  style="${isDone && isScheduledToday ? `background:${habit.color || 'var(--accent)'}; border-color:transparent; box-shadow: 0 8px 24px ${habit.color || 'var(--accent-glow)'}` : ''}"
+                  ${!isScheduledToday ? 'disabled' : ''}
+                  onclick="toggleHabitToday('${habit.id}', event)">
+            <i data-lucide="${checkIcon}"></i>
+          </button>
+        </div>
+        <div class="grid-wrapper" id="wrapper-${habit.id}">
+          <div class="grid-container" id="grid-${habit.id}"></div>
+        </div>
+      `;
+      container.appendChild(card);
+      renderGrid(habit);
+    });
+
+    refreshIcons();
+  }
+
+  function renderGrid(habit) {
+    const grid = document.getElementById(`grid-${habit.id}`);
+    const wrapper = document.getElementById(`wrapper-${habit.id}`);
+    grid.innerHTML = '';
+    const days = [];
+    for (let i = 97; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      days.push(d);
+    }
+    days.forEach(dObj => {
+      const dStr = formatDate(dObj);
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      
+      const isScheduled = isHabitScheduledForDate(habit, dObj);
+      if (!isScheduled) cell.classList.add('off-day');
+
+      if (dStr === todayStr) cell.classList.add('today-cell');
+      if (historyStore[habit.id] && historyStore[habit.id][dStr]) {
+        cell.classList.add('active');
+        if(habit.color) {
+          cell.style.backgroundColor = habit.color;
+          cell.style.boxShadow = `0 0 8px ${habit.color}`;
+        }
+      }
+      grid.appendChild(cell);
+    });
+
+    setTimeout(() => { if (wrapper) wrapper.scrollLeft = wrapper.scrollWidth; }, 50);
+  }
+
+  function toggleHabitToday(id, e) {
+    if(e) e.stopPropagation();
+    const habit = habits.find(h => h.id === id);
+    if(!isHabitScheduledForDate(habit, todayObj)) return;
+
+    if (!historyStore[id]) historyStore[id] = {};
+    historyStore[id][todayStr] = !historyStore[id][todayStr];
+    localStorage.setItem('cyber_history', JSON.stringify(historyStore));
+    renderHome();
+  }
+
+  function openAddHabit() {
+    editingHabitId = null;
+    document.getElementById('edit-screen-title').innerText = "NEW LIMIT";
+    document.getElementById('habit-name-input').value = '';
+    document.getElementById('habit-desc-input').value = '';
+    selectedDays = [1,2,3,4,5,6,0];
+    selectedColor = availableColors[0];
+    selectedIcon = 'zap';
+    setupPickers();
+    switchScreen('screen-edit');
+  }
+
+  function setupPickers() {
+    const daysPicker = document.getElementById('days-picker');
+    daysPicker.innerHTML = '';
+    weekDays.forEach(day => {
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = `day-btn ${selectedDays.includes(day.id) ? 'selected' : ''}`;
+      el.innerText = day.label;
+      el.onclick = () => {
+        if (selectedDays.includes(day.id)) {
+          if (selectedDays.length > 1) selectedDays = selectedDays.filter(d => d !== day.id);
+        } else {
+          selectedDays.push(day.id);
+        }
+        setupPickers();
+      };
+      daysPicker.appendChild(el);
+    });
+
+    const colorGrid = document.getElementById('color-picker');
+    colorGrid.innerHTML = '';
+    availableColors.forEach(c => {
+      const el = document.createElement('div');
+      el.className = `color-option ${c === selectedColor ? 'selected' : ''}`;
+      el.style.background = c;
+      el.onclick = () => { selectedColor = c; setupPickers(); };
+      colorGrid.appendChild(el);
+    });
+
+    const iconGrid = document.getElementById('icon-picker');
+    iconGrid.innerHTML = '';
+    
+    let displayIcons = [...quickIcons];
+    if(!displayIcons.includes(selectedIcon)) displayIcons.unshift(selectedIcon);
+
+    displayIcons.forEach(iconName => {
+      const el = document.createElement('div');
+      el.className = `icon-option ${iconName === selectedIcon ? 'selected' : ''}`;
+      el.innerHTML = `<i data-lucide="${iconName}"></i>`;
+      el.onclick = () => { selectedIcon = iconName; setupPickers(); };
+      iconGrid.appendChild(el);
+    });
+
+    refreshIcons();
+    Array.from(iconGrid.children).forEach(child => {
+      if (!child.querySelector('svg')) child.remove();
+    });
+  }
+
+  function openIconSearchModal() {
+    document.getElementById('icon-search-modal').classList.add('active');
+    document.getElementById('icon-search-input').value = '';
+    filterAllIcons();
+  }
+
+  function closeIconSearchModal() {
+    document.getElementById('icon-search-modal').classList.remove('active');
+  }
+
+  function filterAllIcons() {
+    const query = document.getElementById('icon-search-input').value.toLowerCase().trim();
+    const grid = document.getElementById('all-icons-grid');
+    grid.innerHTML = '';
+
+    let iconKeys = window.lucide && window.lucide.icons ? Object.keys(window.lucide.icons).map(k => k.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()) : quickIcons;
+    iconKeys = [...new Set(iconKeys)].filter(i => !query || i.includes(query)).slice(0, 40);
+
+    iconKeys.forEach(iconName => {
+      const el = document.createElement('div');
+      el.className = `icon-option ${iconName === selectedIcon ? 'selected' : ''}`;
+      el.innerHTML = `<i data-lucide="${iconName}"></i>`;
+      el.onclick = () => {
+        selectedIcon = iconName;
+        setupPickers();
+        closeIconSearchModal();
+      };
+      grid.appendChild(el);
+    });
+
+    refreshIcons();
+    Array.from(grid.children).forEach(child => {
+      if (!child.querySelector('svg')) child.remove();
+    });
+  }
+
+  function saveHabit() {
+    const name = document.getElementById('habit-name-input').value.trim();
+    const desc = document.getElementById('habit-desc-input').value.trim();
+    if (!name) return alert('PLEASE ENTER A HABIT NAME');
+
+    if (editingHabitId) {
+      const h = habits.find(x => x.id === editingHabitId);
+      h.name = name; h.desc = desc; h.color = selectedColor; h.icon = selectedIcon; h.days = selectedDays;
+    } else {
+      habits.push({ id: Date.now().toString(), name, desc, color: selectedColor, icon: selectedIcon, days: selectedDays });
+    }
+
+    localStorage.setItem('cyber_habits', JSON.stringify(habits));
+    renderHome();
+    switchScreen('screen-home');
+  }
+
+  function openModal(id) {
+    selectedHabitId = id;
+    const h = habits.find(x => x.id === id);
+    document.getElementById('modal-habit-title').innerText = h.name;
+    document.getElementById('modal-habit-title').style.color = h.color || 'var(--accent)';
+    document.getElementById('modal-habit-desc').innerText = h.desc || '';
+    document.getElementById('action-modal').classList.add('active');
+  }
+
+  function closeModal() { document.getElementById('action-modal').classList.remove('active'); }
+  function toggleTodayModal() { toggleHabitToday(selectedHabitId); closeModal(); }
+
+  function editCurrentHabit() {
+    const h = habits.find(x => x.id === selectedHabitId);
+    editingHabitId = h.id;
+    document.getElementById('edit-screen-title').innerText = "EDIT LIMIT";
+    document.getElementById('habit-name-input').value = h.name;
+    document.getElementById('habit-desc-input').value = h.desc || '';
+    selectedColor = h.color || availableColors[0]; 
+    selectedIcon = h.icon || 'zap';
+    selectedDays = h.days ? [...h.days] : [1,2,3,4,5,6,0];
+    setupPickers();
+    closeModal();
+    switchScreen('screen-edit');
+  }
+
+  function deleteCurrentHabit() {
+    if (confirm("DELETE THIS HABIT?")) {
+      habits = habits.filter(x => x.id !== selectedHabitId);
+      localStorage.setItem('cyber_habits', JSON.stringify(habits));
+      renderHome();
+      closeModal();
+    }
+  }
+
+  function renderCalendar() {
+    const query = document.getElementById('history-search-input').value.toLowerCase().trim();
+    const calGrid = document.getElementById('calendar-days');
+    calGrid.innerHTML = '';
+    
+    for (let i = 27; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const dStr = formatDate(d);
+      const dayEl = document.createElement('div');
+      dayEl.className = `cal-day ${dStr === activeCalDate ? 'selected' : ''}`;
+      dayEl.innerText = d.getDate();
+      dayEl.onclick = () => { activeCalDate = dStr; renderCalendar(); };
+      calGrid.appendChild(dayEl);
+    }
+
+    document.getElementById('selected-cal-date').innerText = `LOG DATE: ${activeCalDate}`;
+    
+    const list = document.getElementById('calendar-habits-list');
+    list.innerHTML = '';
+    const activeCalObj = new Date(activeCalDate);
+
+    const filteredHabits = habits.filter(h => !query || h.name.toLowerCase().includes(query) || (h.desc && h.desc.toLowerCase().includes(query)));
+
+    filteredHabits.forEach(h => {
+      const isDone = historyStore[h.id] && historyStore[h.id][activeCalDate];
+      const isScheduled = isHabitScheduledForDate(h, activeCalObj);
+      const checkIcon = !isScheduled ? 'square' : (isDone ? 'check-square' : 'square');
+
+      const item = document.createElement('div');
+      item.className = 'habit-card';
+      item.style.padding = '14px 18px';
+
+      item.innerHTML = `
+        <div class="habit-top" style="margin:0;">
+          <div class="habit-info">
+            <div class="habit-icon" style="color: ${h.color || 'var(--accent)'}"><i data-lucide="${h.icon || 'zap'}"></i></div>
+            <div class="habit-name">${h.name}</div>
+          </div>
+          <button class="check-btn ${!isScheduled ? 'disabled' : (isDone ? 'completed' : '')}" 
+                  style="${isDone && isScheduled ? `background:${h.color || 'var(--accent)'}; border-color:transparent; box-shadow: 0 8px 24px ${h.color || 'var(--accent-glow)'}` : ''}"
+                  ${!isScheduled ? 'disabled' : ''}
+                  onclick="toggleHistDate('${h.id}', '${activeCalDate}')">
+            <i data-lucide="${checkIcon}"></i>
+          </button>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+
+    refreshIcons();
+  }
+
+  function toggleHistDate(habitId, dateStr) {
+    const habit = habits.find(h => h.id === habitId);
+    if(!isHabitScheduledForDate(habit, new Date(dateStr))) return;
+
+    if (!historyStore[habitId]) historyStore[habitId] = {};
+    historyStore[habitId][dateStr] = !historyStore[habitId][dateStr];
+    localStorage.setItem('cyber_history', JSON.stringify(historyStore));
+    renderCalendar();
+    renderHome();
+  }
+
+  function shareHabitCard() {
+    const habit = habits.find(h => h.id === selectedHabitId);
+    if (!habit) return;
+
+    const streak = calculateStreak(habit.id);
+    const canvas = document.getElementById('share-canvas');
+    canvas.width = 600;
+    canvas.height = 350;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#050206';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = habit.color || '#ff1a43';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+    ctx.fillStyle = habit.color || '#ff1a43';
+    ctx.font = 'bold 32px sans-serif';
+    ctx.fillText(habit.name.toUpperCase(), 50, 80);
+
+    ctx.fillStyle = '#a894a0';
+    ctx.font = '18px sans-serif';
+    ctx.fillText(habit.desc || 'OVERRIDE PROTOCOL', 50, 110);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 24px sans-serif';
+    ctx.fillText(`🔥 STREAK: ${streak} DAYS`, 50, 160);
+
+    ctx.fillStyle = habit.color || '#ff1a43';
+    ctx.font = '14px sans-serif';
+    ctx.fillText('HABITKIT // GLOW TRACKER', 50, 300);
+
+    const imageURL = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = `${habit.name}_streak.png`;
+    link.href = imageURL;
+    link.click();
+    closeModal();
+  }
+
+  function requestNotificationPermission() {
+    if ('Notification' in window) {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          new Notification('OVERRIDE // SYSTEM', { body: 'Notifications enabled!' });
+        } else {
+          alert('Notification permission denied.');
+        }
+      });
+    } else {
+      alert('Web notifications are not supported by your browser.');
+    }
+  }
+
+  function exportData() {
+    const data = { habits, historyStore };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `habitkit_backup_${todayStr}.json`;
+    a.click();
+  }
+
+  function importData() {
+    document.getElementById('import-file-input').click();
+  }
+
+  function handleImportFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.habits && data.historyStore) {
+          habits = data.habits;
+          historyStore = data.historyStore;
+          localStorage.setItem('cyber_habits', JSON.stringify(habits));
+          localStorage.setItem('cyber_history', JSON.stringify(historyStore));
+          renderHome();
+          alert('DATA IMPORTED SUCCESSFULLY!');
+        }
+      } catch (err) {
+        alert('INVALID BACKUP FILE!');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  renderHome();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+</body>
+</html>

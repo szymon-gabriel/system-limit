@@ -1,0 +1,29 @@
+{
+  "name": "system-limit",
+  "version": "1.0.0",
+  "description": "A cyberpunk-inspired, production-ready Progressive Web Application (PWA) engineered for high-density daily habit management, visual streak tracking, and personal protocol enforcement.",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/szymon-gabriel/system-limit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/szymon-gabriel/system-limit/issues"
+  },
+  "homepage": "https://github.com/szymon-gabriel/system-limit#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/core": "^8.5.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.0"
+  }
+}

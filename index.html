@@ -14,6 +14,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
+/* ==========================================================================
+   1. CSS Custom Properties & Themes
+   ========================================================================== */
     :root[data-theme="cyber"] {
       --bg: #050206;
       --bg-gradient: radial-gradient(circle at 50% 15%, rgba(255, 13, 60, 0.22) 0%, transparent 60%),
@@ -67,6 +70,9 @@
       --accent-glow: rgba(0, 162, 255, 0.45);
     }
 
+/* ==========================================================================
+   2. CSS Base & Layout
+   ========================================================================== */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -162,6 +168,9 @@
     }
     .icon-btn:active { transform: scale(0.92); }
 
+/* ==========================================================================
+   3. CSS Components, Cards & Grids
+   ========================================================================== */
     .habit-card {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
@@ -173,15 +182,36 @@
       margin-bottom: 18px;
       position: relative;
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      touch-action: pan-y;
     }
+    
+    .habit-card.dragging {
+      opacity: 0.4;
+      transform: scale(0.98);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .drag-handle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      opacity: 0.4;
+      padding-right: 8px;
+      cursor: grab;
+      touch-action: none;
+    }
+    .drag-handle:active { cursor: grabbing; opacity: 1; }
+
     .habit-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
-    .habit-info { display: flex; align-items: center; gap: 14px; cursor: pointer; flex: 1; }
+    .habit-info { display: flex; align-items: center; gap: 12px; cursor: pointer; flex: 1; }
     .habit-icon {
       width: 48px;
       height: 48px;
@@ -214,6 +244,21 @@
       border-radius: 20px;
       color: var(--accent);
       margin-top: 6px;
+      font-weight: 700;
+    }
+
+    .reminder-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 8px;
+      border-radius: 20px;
+      color: var(--text-sub);
+      margin-top: 6px;
+      margin-left: 4px;
       font-weight: 700;
     }
 
@@ -253,6 +298,52 @@
       opacity: 0.4;
     }
 
+    .subtasks-container {
+      margin-top: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+    .subtask-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .subtask-item.completed {
+      text-decoration: line-through;
+      opacity: 0.6;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .subtask-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 1px solid var(--card-border-top);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: rgba(0,0,0,0.3);
+    }
+    .subtask-item.completed .subtask-checkbox {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+
     .grid-wrapper {
       overflow-x: auto;
       padding-bottom: 4px;
@@ -282,6 +373,47 @@
       box-shadow: 0 0 10px var(--accent-glow);
     }
 
+    .yearly-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-top: 1px solid var(--card-border-top);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(20px);
+    }
+    .yearly-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .yearly-stats {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+    .yearly-grid-container {
+      display: grid;
+      grid-template-rows: repeat(7, 1fr);
+      grid-auto-flow: column;
+      gap: 3px;
+      width: max-content;
+    }
+    .yearly-cell {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+    .yearly-cell.active {
+      background-color: var(--accent);
+      box-shadow: 0 0 6px var(--accent-glow);
+    }
+
+/* ==========================================================================
+   4. CSS Forms, Inputs & Modals
+   ========================================================================== */
     .form-group { margin-bottom: 22px; }
     label { 
       display: block; 
@@ -292,7 +424,7 @@
       font-weight: 700; 
       text-transform: uppercase;
     }
-    input[type="text"], select {
+    input[type="text"], input[type="time"], select {
       width: 100%;
       min-height: 50px;
       padding: 14px 16px;
@@ -306,7 +438,7 @@
       backdrop-filter: blur(10px);
       transition: border-color 0.2s ease;
     }
-    input[type="text"]:focus {
+    input[type="text"]:focus, input[type="time"]:focus {
       border-color: var(--accent);
       box-shadow: 0 0 15px var(--accent-glow);
     }
@@ -506,10 +638,25 @@
       transition: all 0.2s ease;
     }
     .theme-card.selected { border-color: var(--accent); color: var(--accent); background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 16px var(--accent-glow); }
+
+    .subtask-edit-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+    }
   </style>
 </head>
 <body>
 
+<!-- ==========================================================================
+     5. HTML Views & Navigation Structure
+     ========================================================================== -->
 <div class="app">
   
   <div id="screen-home" class="screen active">
@@ -541,6 +688,20 @@
     <div class="form-group">
       <label>Description / Goal</label>
       <input type="text" id="habit-desc-input" placeholder="e.g. 30 minutes daily">
+    </div>
+
+    <div class="form-group">
+      <label>Habit Reminder Time (Optional)</label>
+      <input type="time" id="habit-reminder-input">
+    </div>
+
+    <div class="form-group">
+      <label>Subtasks / Podpunkty</label>
+      <div style="display:flex; gap:8px; margin-bottom:10px;">
+        <input type="text" id="subtask-input" placeholder="Add subtask...">
+        <button type="button" class="action-btn" style="min-height:46px; width:80px;" onclick="addSubtaskFromInput()">ADD</button>
+      </div>
+      <div id="subtasks-list-edit"></div>
     </div>
 
     <div class="form-group">
@@ -579,6 +740,16 @@
     <div style="margin-top: 22px;" id="calendar-habits-list"></div>
   </div>
 
+  <div id="screen-yearly" class="screen">
+    <header>
+      <div>
+        <div class="system-title">ANNUAL ANALYSIS</div>
+        <h1>YEARLY VIEW</h1>
+      </div>
+    </header>
+    <div id="yearly-container"></div>
+  </div>
+
   <div id="screen-settings" class="screen">
     <header>
       <button class="icon-btn" onclick="switchScreen('screen-home')"><i data-lucide="arrow-left"></i></button>
@@ -597,8 +768,10 @@
     </div>
 
     <div class="form-group">
-      <label>Notifications</label>
-      <button class="action-btn-secondary" onclick="requestNotificationPermission()">ENABLE NOTIFICATIONS</button>
+      <label>Notifications & Daily Reminder</label>
+      <button class="action-btn-secondary" style="margin-bottom:10px;" onclick="requestNotificationPermission()">ENABLE SYSTEM NOTIFICATIONS</button>
+      <label style="margin-top:10px;">Daily Tasks Check Reminder Time</label>
+      <input type="time" id="global-reminder-input" onchange="saveGlobalReminderTime()">
     </div>
 
     <div class="form-group">
@@ -642,6 +815,9 @@
     <button class="nav-item" onclick="switchScreen('screen-calendar', this)">
       <i data-lucide="calendar" style="width:22px; height:22px;"></i> HISTORY
     </button>
+    <button class="nav-item" onclick="switchScreen('screen-yearly', this)">
+      <i data-lucide="grid" style="width:22px; height:22px;"></i> YEARLY
+    </button>
   </nav>
 
 </div>
@@ -649,6 +825,9 @@
 <canvas id="share-canvas" style="display:none;"></canvas>
 
 <script>
+/* ==========================================================================
+   6. Global Data Variables & Application State
+   ========================================================================== */
   const weekDays = [
     { id: 1, label: 'MON' }, { id: 2, label: 'TUE' }, { id: 3, label: 'WED' },
     { id: 4, label: 'THU' }, { id: 5, label: 'FRI' }, { id: 6, label: 'SAT' }, { id: 0, label: 'SUN' }
@@ -667,23 +846,32 @@
     'zap', 'target', 'clock', 'crosshair', 'check-square'
   ];
 
-  const defaultHabits = [];
-
-  let habits = JSON.parse(localStorage.getItem('cyber_habits')) || defaultHabits;
+  let habits = JSON.parse(localStorage.getItem('cyber_habits')) || [];
   let historyStore = JSON.parse(localStorage.getItem('cyber_history')) || {};
   let currentTheme = localStorage.getItem('cyber_theme') || 'cyber';
+  let globalReminderTime = localStorage.getItem('cyber_global_reminder') || '';
 
   let selectedHabitId = null;
   let selectedColor = availableColors[0];
   let selectedIcon = 'zap';
   let selectedDays = [1,2,3,4,5,6,0];
   let editingHabitId = null;
+  let tempSubtasks = [];
   let activeCalDate = new Date().toISOString().split('T')[0];
+  let sentNotifications = {};
+
+  let draggedCard = null;
+  let touchTimer = null;
+  let activeTouchCard = null;
+  let startY = 0;
 
   function formatDate(d) { return d.toISOString().split('T')[0]; }
   const todayObj = new Date();
   const todayStr = formatDate(todayObj);
 
+/* ==========================================================================
+   7. Theme & Core Utility Functions
+   ========================================================================== */
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
@@ -708,6 +896,10 @@
       btn.classList.add('active');
     }
     if (screenId === 'screen-calendar') renderCalendar();
+    if (screenId === 'screen-yearly') renderYearly();
+    if (screenId === 'screen-settings') {
+      document.getElementById('global-reminder-input').value = globalReminderTime;
+    }
     refreshIcons();
     window.scrollTo(0, 0);
   }
@@ -718,6 +910,23 @@
     return habitDays.includes(targetDay);
   }
 
+  function getHabitDayData(habitId, dateStr) {
+    let data = historyStore[habitId] && historyStore[habitId][dateStr];
+    if (typeof data === 'boolean') {
+      return { done: data, subtasks: {} };
+    }
+    if (!data) {
+      return { done: false, subtasks: {} };
+    }
+    return data;
+  }
+
+  function saveHabitDayData(habitId, dateStr, dayData) {
+    if (!historyStore[habitId]) historyStore[habitId] = {};
+    historyStore[habitId][dateStr] = dayData;
+    localStorage.setItem('cyber_history', JSON.stringify(historyStore));
+  }
+
   function calculateStreak(habitId) {
     const habit = habits.find(h => h.id === habitId);
     if (!habit) return 0;
@@ -726,7 +935,7 @@
     let d = new Date();
     let dStr = formatDate(d);
     
-    let doneToday = historyStore[habitId] && historyStore[habitId][dStr];
+    let doneToday = getHabitDayData(habitId, dStr).done;
     if (!doneToday) {
       d.setDate(d.getDate() - 1);
     }
@@ -734,7 +943,7 @@
     for (let i = 0; i < 365; i++) {
       dStr = formatDate(d);
       if (isHabitScheduledForDate(habit, d)) {
-        if (historyStore[habitId] && historyStore[habitId][dStr]) {
+        if (getHabitDayData(habitId, dStr).done) {
           streak++;
         } else {
           break;
@@ -745,28 +954,56 @@
     return streak;
   }
 
+/* ==========================================================================
+   8. UI Rendering Engines (Dashboard, Calendar, Yearly)
+   ========================================================================== */
   function renderHome() {
     const container = document.getElementById('habits-container');
     container.innerHTML = '';
     
-    habits.forEach(habit => {
+    habits.forEach((habit, index) => {
       const card = document.createElement('div');
       card.className = 'habit-card';
+      card.draggable = true;
+      card.dataset.index = index;
+      card.dataset.id = habit.id;
 
-      const isDone = historyStore[habit.id] && historyStore[habit.id][todayStr];
+      const dayData = getHabitDayData(habit.id, todayStr);
+      const isDone = dayData.done;
       const isScheduledToday = isHabitScheduledForDate(habit, todayObj);
       const streak = calculateStreak(habit.id);
 
       const checkIcon = !isScheduledToday ? 'square' : (isDone ? 'check-square' : 'square');
 
+      let subtasksHtml = '';
+      if (habit.subtasks && habit.subtasks.length > 0) {
+        subtasksHtml = `<div class="subtasks-container">`;
+        habit.subtasks.forEach(st => {
+          const stDone = dayData.subtasks && dayData.subtasks[st.id];
+          subtasksHtml += `
+            <div class="subtask-item ${stDone ? 'completed' : ''}" onclick="toggleSubtask('${habit.id}', '${st.id}', '${todayStr}', event)">
+              <div class="subtask-checkbox">${stDone ? '<i data-lucide="check" style="width:12px;height:12px;"></i>' : ''}</div>
+              <div style="flex:1;">${st.text}</div>
+            </div>
+          `;
+        });
+        subtasksHtml += `</div>`;
+      }
+
+      let reminderBadgeHtml = habit.reminderTime ? `<div class="reminder-badge"><i data-lucide="clock" style="width:10px;height:10px;"></i> ${habit.reminderTime}</div>` : '';
+
       card.innerHTML = `
         <div class="habit-top">
+          <div class="drag-handle"><i data-lucide="grip-vertical" style="width:18px;height:18px;"></i></div>
           <div class="habit-info" onclick="openModal('${habit.id}')">
             <div class="habit-icon" style="color: ${habit.color || 'var(--accent)'}"><i data-lucide="${habit.icon || 'zap'}"></i></div>
             <div>
               <div class="habit-name">${habit.name}</div>
               <div class="habit-desc">${habit.desc || ''}</div>
-              <div class="streak-badge"><i data-lucide="flame" style="width:12px;height:12px;"></i> ${streak} STREAK</div>
+              <div style="display:flex; align-items:center;">
+                <div class="streak-badge"><i data-lucide="flame" style="width:12px;height:12px;"></i> ${streak} STREAK</div>
+                ${reminderBadgeHtml}
+              </div>
             </div>
           </div>
           <button class="check-btn ${!isScheduledToday ? 'disabled' : (isDone ? 'completed' : '')}" 
@@ -776,10 +1013,21 @@
             <i data-lucide="${checkIcon}"></i>
           </button>
         </div>
+        ${subtasksHtml}
         <div class="grid-wrapper" id="wrapper-${habit.id}">
           <div class="grid-container" id="grid-${habit.id}"></div>
         </div>
       `;
+
+      card.addEventListener('dragstart', handleDragStart);
+      card.addEventListener('dragover', handleDragOver);
+      card.addEventListener('drop', handleDrop);
+      card.addEventListener('dragend', handleDragEnd);
+
+      card.addEventListener('touchstart', handleTouchStart, { passive: true });
+      card.addEventListener('touchmove', handleTouchMove, { passive: false });
+      card.addEventListener('touchend', handleTouchEnd);
+
       container.appendChild(card);
       renderGrid(habit);
     });
@@ -805,7 +1053,7 @@
       if (!isScheduled) cell.classList.add('off-day');
 
       if (dStr === todayStr) cell.classList.add('today-cell');
-      if (historyStore[habit.id] && historyStore[habit.id][dStr]) {
+      if (getHabitDayData(habit.id, dStr).done) {
         cell.classList.add('active');
         if(habit.color) {
           cell.style.backgroundColor = habit.color;
@@ -818,14 +1066,300 @@
     setTimeout(() => { if (wrapper) wrapper.scrollLeft = wrapper.scrollWidth; }, 50);
   }
 
+  function renderYearly() {
+    const container = document.getElementById('yearly-container');
+    container.innerHTML = '';
+
+    if (habits.length === 0) {
+      container.innerHTML = '<div style="color: var(--text-sub); text-align: center; margin-top: 40px; font-size: 0.9rem;">NO HABITS REGISTERED</div>';
+      return;
+    }
+
+    const yearlyDays = [];
+    for (let i = 364; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      yearlyDays.push(d);
+    }
+
+    habits.forEach(habit => {
+      const card = document.createElement('div');
+      card.className = 'yearly-card';
+
+      let totalCompleted = 0;
+      let scheduledTotal = 0;
+
+      yearlyDays.forEach(dObj => {
+        const dStr = formatDate(dObj);
+        const isScheduled = isHabitScheduledForDate(habit, dObj);
+        if (isScheduled) {
+          scheduledTotal++;
+          if (getHabitDayData(habit.id, dStr).done) {
+            totalCompleted++;
+          }
+        }
+      });
+
+      const percentage = scheduledTotal > 0 ? Math.round((totalCompleted / scheduledTotal) * 100) : 0;
+
+      card.innerHTML = `
+        <div class="yearly-header">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="color: ${habit.color || 'var(--accent)'}"><i data-lucide="${habit.icon || 'zap'}" style="width:20px;height:20px;"></i></div>
+            <div style="font-weight: 800; font-size: 1rem; color: #fff;">${habit.name}</div>
+          </div>
+          <div class="yearly-stats">${totalCompleted} DAYS (${percentage}%)</div>
+        </div>
+        <div class="grid-wrapper" id="yearly-wrapper-${habit.id}">
+          <div class="yearly-grid-container" id="yearly-grid-${habit.id}"></div>
+        </div>
+      `;
+
+      container.appendChild(card);
+
+      const grid = document.getElementById(`yearly-grid-${habit.id}`);
+      yearlyDays.forEach(dObj => {
+        const dStr = formatDate(dObj);
+        const cell = document.createElement('div');
+        cell.className = 'yearly-cell';
+
+        if (getHabitDayData(habit.id, dStr).done) {
+          cell.classList.add('active');
+          if (habit.color) {
+            cell.style.backgroundColor = habit.color;
+            cell.style.boxShadow = `0 0 6px ${habit.color}`;
+          }
+        }
+        grid.appendChild(cell);
+      });
+
+      const wrapper = document.getElementById(`yearly-wrapper-${habit.id}`);
+      setTimeout(() => { if (wrapper) wrapper.scrollLeft = wrapper.scrollWidth; }, 50);
+    });
+
+    refreshIcons();
+  }
+
+  function renderCalendar() {
+    const query = document.getElementById('history-search-input').value.toLowerCase().trim();
+    const calGrid = document.getElementById('calendar-days');
+    calGrid.innerHTML = '';
+    
+    for (let i = 27; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const dStr = formatDate(d);
+      const dayEl = document.createElement('div');
+      dayEl.className = `cal-day ${dStr === activeCalDate ? 'selected' : ''}`;
+      dayEl.innerText = d.getDate();
+      dayEl.onclick = () => { activeCalDate = dStr; renderCalendar(); };
+      calGrid.appendChild(dayEl);
+    }
+
+    document.getElementById('selected-cal-date').innerText = `LOG DATE: ${activeCalDate}`;
+    
+    const list = document.getElementById('calendar-habits-list');
+    list.innerHTML = '';
+    const activeCalObj = new Date(activeCalDate);
+
+    const filteredHabits = habits.filter(h => !query || h.name.toLowerCase().includes(query) || (h.desc && h.desc.toLowerCase().includes(query)));
+
+    filteredHabits.forEach(h => {
+      const dayData = getHabitDayData(h.id, activeCalDate);
+      const isDone = dayData.done;
+      const isScheduled = isHabitScheduledForDate(h, activeCalObj);
+      const checkIcon = !isScheduled ? 'square' : (isDone ? 'check-square' : 'square');
+
+      let subtasksHtml = '';
+      if (h.subtasks && h.subtasks.length > 0) {
+        subtasksHtml = `<div class="subtasks-container">`;
+        h.subtasks.forEach(st => {
+          const stDone = dayData.subtasks && dayData.subtasks[st.id];
+          subtasksHtml += `
+            <div class="subtask-item ${stDone ? 'completed' : ''}" onclick="toggleSubtask('${h.id}', '${st.id}', '${activeCalDate}', event)">
+              <div class="subtask-checkbox">${stDone ? '<i data-lucide="check" style="width:12px;height:12px;"></i>' : ''}</div>
+              <div style="flex:1;">${st.text}</div>
+            </div>
+          `;
+        });
+        subtasksHtml += `</div>`;
+      }
+
+      const item = document.createElement('div');
+      item.className = 'habit-card';
+      item.style.padding = '14px 18px';
+
+      item.innerHTML = `
+        <div class="habit-top" style="margin:0;">
+          <div class="habit-info">
+            <div class="habit-icon" style="color: ${h.color || 'var(--accent)'}"><i data-lucide="${h.icon || 'zap'}"></i></div>
+            <div class="habit-name">${h.name}</div>
+          </div>
+          <button class="check-btn ${!isScheduled ? 'disabled' : (isDone ? 'completed' : '')}" 
+                  style="${isDone && isScheduled ? `background:${h.color || 'var(--accent)'}; border-color:transparent; box-shadow: 0 8px 24px ${h.color || 'var(--accent-glow)'}` : ''}"
+                  ${!isScheduled ? 'disabled' : ''}
+                  onclick="toggleHistDate('${h.id}', '${activeCalDate}')">
+            <i data-lucide="${checkIcon}"></i>
+          </button>
+        </div>
+        ${subtasksHtml}
+      `;
+      list.appendChild(item);
+    });
+
+    refreshIcons();
+  }
+
+/* ==========================================================================
+   9. Touch & Drag-and-Drop Dragging Handlers
+   ========================================================================== */
+  function handleDragStart(e) {
+    draggedCard = this;
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const target = e.target.closest('.habit-card');
+    if (target && target !== draggedCard) {
+      const container = document.getElementById('habits-container');
+      const cards = Array.from(container.children);
+      const draggedIndex = cards.indexOf(draggedCard);
+      const targetIndex = cards.indexOf(target);
+
+      if (draggedIndex < targetIndex) {
+        container.insertBefore(draggedCard, target.nextSibling);
+      } else {
+        container.insertBefore(draggedCard, target);
+      }
+    }
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    reorderHabitsFromDOM();
+  }
+
+  function handleDragEnd() {
+    this.classList.remove('dragging');
+    draggedCard = null;
+  }
+
+  function handleTouchStart(e) {
+    const card = this;
+    startY = e.touches[0].clientY;
+    touchTimer = setTimeout(() => {
+      activeTouchCard = card;
+      card.classList.add('dragging');
+      if (navigator.vibrate) navigator.vibrate(40);
+    }, 300);
+  }
+
+  function handleTouchMove(e) {
+    if (!activeTouchCard) {
+      if (Math.abs(e.touches[0].clientY - startY) > 10) {
+        clearTimeout(touchTimer);
+      }
+      return;
+    }
+    e.preventDefault();
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (!target) return;
+    const cardTarget = target.closest('.habit-card');
+    if (cardTarget && cardTarget !== activeTouchCard) {
+      const container = document.getElementById('habits-container');
+      const cards = Array.from(container.children);
+      const draggedIndex = cards.indexOf(activeTouchCard);
+      const targetIndex = cards.indexOf(cardTarget);
+
+      if (draggedIndex < targetIndex) {
+        container.insertBefore(activeTouchCard, cardTarget.nextSibling);
+      } else {
+        container.insertBefore(activeTouchCard, cardTarget);
+      }
+    }
+  }
+
+  function handleTouchEnd() {
+    clearTimeout(touchTimer);
+    if (activeTouchCard) {
+      activeTouchCard.classList.remove('dragging');
+      activeTouchCard = null;
+      reorderHabitsFromDOM();
+    }
+  }
+
+  function reorderHabitsFromDOM() {
+    const container = document.getElementById('habits-container');
+    const newHabits = [];
+    Array.from(container.children).forEach(card => {
+      const id = card.dataset.id;
+      const found = habits.find(h => h.id === id);
+      if (found) newHabits.push(found);
+    });
+    habits = newHabits;
+    localStorage.setItem('cyber_habits', JSON.stringify(habits));
+  }
+
+/* ==========================================================================
+   10. Habit Management, Subtasks & Modal Actions
+   ========================================================================== */
+  function toggleSubtask(habitId, subtaskId, dateStr, e) {
+    if (e) e.stopPropagation();
+    const habit = habits.find(h => h.id === habitId);
+    let dayData = getHabitDayData(habitId, dateStr);
+    if (!dayData.subtasks) dayData.subtasks = {};
+
+    dayData.subtasks[subtaskId] = !dayData.subtasks[subtaskId];
+
+    if (habit.subtasks && habit.subtasks.length > 0) {
+      const allDone = habit.subtasks.every(st => dayData.subtasks[st.id] === true);
+      dayData.done = allDone;
+    }
+
+    saveHabitDayData(habitId, dateStr, dayData);
+    renderHome();
+    if (document.getElementById('screen-calendar').classList.contains('active')) renderCalendar();
+  }
+
   function toggleHabitToday(id, e) {
     if(e) e.stopPropagation();
     const habit = habits.find(h => h.id === id);
     if(!isHabitScheduledForDate(habit, todayObj)) return;
 
-    if (!historyStore[id]) historyStore[id] = {};
-    historyStore[id][todayStr] = !historyStore[id][todayStr];
-    localStorage.setItem('cyber_history', JSON.stringify(historyStore));
+    let dayData = getHabitDayData(id, todayStr);
+    const newDone = !dayData.done;
+    dayData.done = newDone;
+
+    if (habit.subtasks && habit.subtasks.length > 0) {
+      if (!dayData.subtasks) dayData.subtasks = {};
+      habit.subtasks.forEach(st => {
+        dayData.subtasks[st.id] = newDone;
+      });
+    }
+
+    saveHabitDayData(id, todayStr, dayData);
+    renderHome();
+  }
+
+  function toggleHistDate(habitId, dateStr) {
+    const habit = habits.find(h => h.id === habitId);
+    if(!isHabitScheduledForDate(habit, new Date(dateStr))) return;
+
+    let dayData = getHabitDayData(habitId, dateStr);
+    const newDone = !dayData.done;
+    dayData.done = newDone;
+
+    if (habit.subtasks && habit.subtasks.length > 0) {
+      if (!dayData.subtasks) dayData.subtasks = {};
+      habit.subtasks.forEach(st => {
+        dayData.subtasks[st.id] = newDone;
+      });
+    }
+
+    saveHabitDayData(habitId, dateStr, dayData);
+    renderCalendar();
     renderHome();
   }
 
@@ -834,11 +1368,46 @@
     document.getElementById('edit-screen-title').innerText = "NEW LIMIT";
     document.getElementById('habit-name-input').value = '';
     document.getElementById('habit-desc-input').value = '';
+    document.getElementById('habit-reminder-input').value = '';
     selectedDays = [1,2,3,4,5,6,0];
     selectedColor = availableColors[0];
     selectedIcon = 'zap';
+    tempSubtasks = [];
+    renderSubtasksEditList();
     setupPickers();
     switchScreen('screen-edit');
+  }
+
+  function addSubtaskFromInput() {
+    const input = document.getElementById('subtask-input');
+    const txt = input.value.trim();
+    if (txt) {
+      tempSubtasks.push({ id: Date.now().toString(), text: txt });
+      input.value = '';
+      renderSubtasksEditList();
+    }
+  }
+
+  function removeSubtaskEdit(subtaskId) {
+    tempSubtasks = tempSubtasks.filter(s => s.id !== subtaskId);
+    renderSubtasksEditList();
+  }
+
+  function renderSubtasksEditList() {
+    const list = document.getElementById('subtasks-list-edit');
+    list.innerHTML = '';
+    tempSubtasks.forEach(s => {
+      const item = document.createElement('div');
+      item.className = 'subtask-edit-item';
+      item.innerHTML = `
+        <span>${s.text}</span>
+        <button type="button" style="background:none; border:none; color:var(--accent); cursor:pointer;" onclick="removeSubtaskEdit('${s.id}')">
+          <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+        </button>
+      `;
+      list.appendChild(item);
+    });
+    refreshIcons();
   }
 
   function setupPickers() {
@@ -929,13 +1498,30 @@
   function saveHabit() {
     const name = document.getElementById('habit-name-input').value.trim();
     const desc = document.getElementById('habit-desc-input').value.trim();
+    const reminderTime = document.getElementById('habit-reminder-input').value;
+
     if (!name) return alert('PLEASE ENTER A HABIT NAME');
 
     if (editingHabitId) {
       const h = habits.find(x => x.id === editingHabitId);
-      h.name = name; h.desc = desc; h.color = selectedColor; h.icon = selectedIcon; h.days = selectedDays;
+      h.name = name; 
+      h.desc = desc; 
+      h.color = selectedColor; 
+      h.icon = selectedIcon; 
+      h.days = selectedDays;
+      h.reminderTime = reminderTime;
+      h.subtasks = tempSubtasks;
     } else {
-      habits.push({ id: Date.now().toString(), name, desc, color: selectedColor, icon: selectedIcon, days: selectedDays });
+      habits.push({ 
+        id: Date.now().toString(), 
+        name, 
+        desc, 
+        color: selectedColor, 
+        icon: selectedIcon, 
+        days: selectedDays,
+        reminderTime: reminderTime,
+        subtasks: tempSubtasks
+      });
     }
 
     localStorage.setItem('cyber_habits', JSON.stringify(habits));
@@ -961,9 +1547,12 @@
     document.getElementById('edit-screen-title').innerText = "EDIT LIMIT";
     document.getElementById('habit-name-input').value = h.name;
     document.getElementById('habit-desc-input').value = h.desc || '';
+    document.getElementById('habit-reminder-input').value = h.reminderTime || '';
     selectedColor = h.color || availableColors[0]; 
     selectedIcon = h.icon || 'zap';
     selectedDays = h.days ? [...h.days] : [1,2,3,4,5,6,0];
+    tempSubtasks = h.subtasks ? [...h.subtasks] : [];
+    renderSubtasksEditList();
     setupPickers();
     closeModal();
     switchScreen('screen-edit');
@@ -976,69 +1565,6 @@
       renderHome();
       closeModal();
     }
-  }
-
-  function renderCalendar() {
-    const query = document.getElementById('history-search-input').value.toLowerCase().trim();
-    const calGrid = document.getElementById('calendar-days');
-    calGrid.innerHTML = '';
-    
-    for (let i = 27; i >= 0; i--) {
-      const d = new Date(); d.setDate(d.getDate() - i);
-      const dStr = formatDate(d);
-      const dayEl = document.createElement('div');
-      dayEl.className = `cal-day ${dStr === activeCalDate ? 'selected' : ''}`;
-      dayEl.innerText = d.getDate();
-      dayEl.onclick = () => { activeCalDate = dStr; renderCalendar(); };
-      calGrid.appendChild(dayEl);
-    }
-
-    document.getElementById('selected-cal-date').innerText = `LOG DATE: ${activeCalDate}`;
-    
-    const list = document.getElementById('calendar-habits-list');
-    list.innerHTML = '';
-    const activeCalObj = new Date(activeCalDate);
-
-    const filteredHabits = habits.filter(h => !query || h.name.toLowerCase().includes(query) || (h.desc && h.desc.toLowerCase().includes(query)));
-
-    filteredHabits.forEach(h => {
-      const isDone = historyStore[h.id] && historyStore[h.id][activeCalDate];
-      const isScheduled = isHabitScheduledForDate(h, activeCalObj);
-      const checkIcon = !isScheduled ? 'square' : (isDone ? 'check-square' : 'square');
-
-      const item = document.createElement('div');
-      item.className = 'habit-card';
-      item.style.padding = '14px 18px';
-
-      item.innerHTML = `
-        <div class="habit-top" style="margin:0;">
-          <div class="habit-info">
-            <div class="habit-icon" style="color: ${h.color || 'var(--accent)'}"><i data-lucide="${h.icon || 'zap'}"></i></div>
-            <div class="habit-name">${h.name}</div>
-          </div>
-          <button class="check-btn ${!isScheduled ? 'disabled' : (isDone ? 'completed' : '')}" 
-                  style="${isDone && isScheduled ? `background:${h.color || 'var(--accent)'}; border-color:transparent; box-shadow: 0 8px 24px ${h.color || 'var(--accent-glow)'}` : ''}"
-                  ${!isScheduled ? 'disabled' : ''}
-                  onclick="toggleHistDate('${h.id}', '${activeCalDate}')">
-            <i data-lucide="${checkIcon}"></i>
-          </button>
-        </div>
-      `;
-      list.appendChild(item);
-    });
-
-    refreshIcons();
-  }
-
-  function toggleHistDate(habitId, dateStr) {
-    const habit = habits.find(h => h.id === habitId);
-    if(!isHabitScheduledForDate(habit, new Date(dateStr))) return;
-
-    if (!historyStore[habitId]) historyStore[habitId] = {};
-    historyStore[habitId][dateStr] = !historyStore[habitId][dateStr];
-    localStorage.setItem('cyber_history', JSON.stringify(historyStore));
-    renderCalendar();
-    renderHome();
   }
 
   function shareHabitCard() {
@@ -1072,7 +1598,7 @@
 
     ctx.fillStyle = habit.color || '#ff1a43';
     ctx.font = '14px sans-serif';
-    ctx.fillText('HABITKIT // GLOW TRACKER', 50, 300);
+    ctx.fillText('SYSTEM_LIMIT_/ HABIT TRACKER', 50, 300);
 
     const imageURL = canvas.toDataURL('image/png');
     const link = document.createElement('a');
@@ -1082,27 +1608,77 @@
     closeModal();
   }
 
+/* ==========================================================================
+   11. Notifications & Reminders Engine
+   ========================================================================== */
+  function saveGlobalReminderTime() {
+    const val = document.getElementById('global-reminder-input').value;
+    globalReminderTime = val;
+    localStorage.setItem('cyber_global_reminder', val);
+  }
+
   function requestNotificationPermission() {
     if ('Notification' in window) {
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
-          new Notification('OVERRIDE // SYSTEM', { body: 'Notifications enabled!' });
+          new Notification('SYSTEM_LIMIT_ // NOTIFICATIONS', { body: 'Powiadomienia aktywne!' });
         } else {
-          alert('Notification permission denied.');
+          alert('Brak zgody na powiadomienia.');
         }
       });
     } else {
-      alert('Web notifications are not supported by your browser.');
+      alert('Twoja przeglądarka nie wspiera Web Notifications.');
     }
   }
 
+  function checkReminders() {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+    const now = new Date();
+    const currentHHMM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const dateKey = formatDate(now);
+
+    if (globalReminderTime === currentHHMM) {
+      const key = `global_${dateKey}_${currentHHMM}`;
+      if (!sentNotifications[key]) {
+        sentNotifications[key] = true;
+        const pendingCount = habits.filter(h => isHabitScheduledForDate(h, now) && !getHabitDayData(h.id, dateKey).done).length;
+        if (pendingCount > 0) {
+          new Notification('SYSTEM_LIMIT_ // PRZYPOMNIENIE', {
+            body: `Masz jeszcze ${pendingCount} zadań do odznaczenia dzisiaj!`
+          });
+        }
+      }
+    }
+
+    habits.forEach(h => {
+      if (h.reminderTime === currentHHMM && isHabitScheduledForDate(h, now)) {
+        const dayData = getHabitDayData(h.id, dateKey);
+        if (!dayData.done) {
+          const key = `habit_${h.id}_${dateKey}_${currentHHMM}`;
+          if (!sentNotifications[key]) {
+            sentNotifications[key] = true;
+            new Notification(`PRZYPOMNIENIE: ${h.name}`, {
+              body: h.desc || 'Czas wykonać Twój nawyk!'
+            });
+          }
+        }
+      }
+    });
+  }
+
+  setInterval(checkReminders, 20000);
+
+/* ==========================================================================
+   12. Data Import, Export & Service Worker Initialization
+   ========================================================================== */
   function exportData() {
     const data = { habits, historyStore };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `habitkit_backup_${todayStr}.json`;
+    a.download = `LIMIT_habit_tracker_backup_${todayStr}.json`;
     a.click();
   }
 
@@ -1133,8 +1709,7 @@
   }
 
   renderHome();
-</script>
-<script>
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js');
   }

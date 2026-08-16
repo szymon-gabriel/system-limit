@@ -14,9 +14,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-/* ==========================================================================
-   1. CSS Custom Properties & Themes
-   ========================================================================== */
     :root[data-theme="cyber"] {
       --bg: #050206;
       --bg-gradient: radial-gradient(circle at 50% 15%, rgba(255, 13, 60, 0.22) 0%, transparent 60%),
@@ -70,9 +67,6 @@
       --accent-glow: rgba(0, 162, 255, 0.45);
     }
 
-/* ==========================================================================
-   2. CSS Base & Layout
-   ========================================================================== */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -168,9 +162,6 @@
     }
     .icon-btn:active { transform: scale(0.92); }
 
-/* ==========================================================================
-   3. CSS Components, Cards & Grids
-   ========================================================================== */
     .habit-card {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
@@ -344,6 +335,34 @@
       box-shadow: 0 0 8px var(--accent-glow);
     }
 
+    .extra-task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-top: 1px solid var(--card-border-top);
+      padding: 14px 16px;
+      border-radius: 18px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+    }
+    .extra-task-content {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+    }
+    .extra-task-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      word-break: break-word;
+    }
+
     .grid-wrapper {
       overflow-x: auto;
       padding-bottom: 4px;
@@ -411,9 +430,6 @@
       box-shadow: 0 0 6px var(--accent-glow);
     }
 
-/* ==========================================================================
-   4. CSS Forms, Inputs & Modals
-   ========================================================================== */
     .form-group { margin-bottom: 22px; }
     label { 
       display: block; 
@@ -654,9 +670,6 @@
 </head>
 <body>
 
-<!-- ==========================================================================
-     5. HTML Views & Navigation Structure
-     ========================================================================== -->
 <div class="app">
   
   <div id="screen-home" class="screen active">
@@ -696,7 +709,7 @@
     </div>
 
     <div class="form-group">
-      <label>Subtasks / Podpunkty</label>
+      <label>Subtasks</label>
       <div style="display:flex; gap:8px; margin-bottom:10px;">
         <input type="text" id="subtask-input" placeholder="Add subtask...">
         <button type="button" class="action-btn" style="min-height:46px; width:80px;" onclick="addSubtaskFromInput()">ADD</button>
@@ -738,6 +751,25 @@
     <div style="color: var(--text-sub); font-size: 0.75rem; font-weight: 700; margin-bottom: 8px;" id="selected-cal-date">SELECT DATE</div>
     <div class="calendar-grid" id="calendar-days"></div>
     <div style="margin-top: 22px;" id="calendar-habits-list"></div>
+  </div>
+
+  <div id="screen-extra" class="screen">
+    <header>
+      <div>
+        <div class="system-title">ONE-OFF TASKS</div>
+        <h1>EXTRA TODAY</h1>
+      </div>
+    </header>
+
+    <div class="form-group">
+      <label>Add task for today</label>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="extra-task-input" placeholder="e.g. Buy milk, Send bank transfer..." onkeydown="if(event.key === 'Enter') addExtraTask()">
+        <button type="button" class="btn-primary" style="width:auto; min-height:50px; padding: 0 22px; border-radius:16px;" onclick="addExtraTask()">ADD</button>
+      </div>
+    </div>
+
+    <div id="extra-tasks-container"></div>
   </div>
 
   <div id="screen-yearly" class="screen">
@@ -815,6 +847,9 @@
     <button class="nav-item" onclick="switchScreen('screen-calendar', this)">
       <i data-lucide="calendar" style="width:22px; height:22px;"></i> HISTORY
     </button>
+    <button class="nav-item" onclick="switchScreen('screen-extra', this)">
+      <i data-lucide="check-square" style="width:22px; height:22px;"></i> EXTRA TODAY
+    </button>
     <button class="nav-item" onclick="switchScreen('screen-yearly', this)">
       <i data-lucide="grid" style="width:22px; height:22px;"></i> YEARLY
     </button>
@@ -825,17 +860,15 @@
 <canvas id="share-canvas" style="display:none;"></canvas>
 
 <script>
-/* ==========================================================================
-   6. Global Data Variables & Application State
-   ========================================================================== */
   const weekDays = [
     { id: 1, label: 'MON' }, { id: 2, label: 'TUE' }, { id: 3, label: 'WED' },
     { id: 4, label: 'THU' }, { id: 5, label: 'FRI' }, { id: 6, label: 'SAT' }, { id: 0, label: 'SUN' }
   ];
 
   const availableColors = [
-    '#ff1a43', '#ff5500', '#ff00a0', '#9d00ff', '#00ffcc',
-    '#00e5ff', '#0088ff', '#00ff66', '#a6ff00', '#ffcc00'
+    '#ff1a43', '#00ff41', '#d900ff', '#00a2ff', '#ff007f',
+    '#00f0ff', '#ff9900', '#ffe600', '#00ffb7', '#7000ff',
+    '#f11c9c', '#00e676', '#3d5af1', '#ff70a6', '#ffffff'
   ];
 
   const quickIcons = [
@@ -848,6 +881,7 @@
 
   let habits = JSON.parse(localStorage.getItem('cyber_habits')) || [];
   let historyStore = JSON.parse(localStorage.getItem('cyber_history')) || {};
+  let extraTasks = JSON.parse(localStorage.getItem('cyber_extra_tasks')) || [];
   let currentTheme = localStorage.getItem('cyber_theme') || 'cyber';
   let globalReminderTime = localStorage.getItem('cyber_global_reminder') || '';
 
@@ -869,9 +903,6 @@
   const todayObj = new Date();
   const todayStr = formatDate(todayObj);
 
-/* ==========================================================================
-   7. Theme & Core Utility Functions
-   ========================================================================== */
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
@@ -896,6 +927,7 @@
       btn.classList.add('active');
     }
     if (screenId === 'screen-calendar') renderCalendar();
+    if (screenId === 'screen-extra') renderExtraTasks();
     if (screenId === 'screen-yearly') renderYearly();
     if (screenId === 'screen-settings') {
       document.getElementById('global-reminder-input').value = globalReminderTime;
@@ -954,9 +986,6 @@
     return streak;
   }
 
-/* ==========================================================================
-   8. UI Rendering Engines (Dashboard, Calendar, Yearly)
-   ========================================================================== */
   function renderHome() {
     const container = document.getElementById('habits-container');
     container.innerHTML = '';
@@ -1208,9 +1237,49 @@
     refreshIcons();
   }
 
-/* ==========================================================================
-   9. Touch & Drag-and-Drop Dragging Handlers
-   ========================================================================== */
+  function renderExtraTasks() {
+    const container = document.getElementById('extra-tasks-container');
+    container.innerHTML = '';
+
+    if (extraTasks.length === 0) {
+      container.innerHTML = '<div style="color: var(--text-sub); text-align: center; margin-top: 40px; font-size: 0.85rem; font-weight: 700;">NO EXTRA TASKS FOR TODAY</div>';
+      return;
+    }
+
+    extraTasks.forEach(task => {
+      const item = document.createElement('div');
+      item.className = 'extra-task-item';
+      item.innerHTML = `
+        <div class="extra-task-content">
+          <button class="check-btn" onclick="completeExtraTask('${task.id}')">
+            <i data-lucide="square"></i>
+          </button>
+          <span class="extra-task-text">${task.text}</span>
+        </div>
+      `;
+      container.appendChild(item);
+    });
+
+    refreshIcons();
+  }
+
+  function addExtraTask() {
+    const input = document.getElementById('extra-task-input');
+    const txt = input.value.trim();
+    if (!txt) return;
+
+    extraTasks.push({ id: Date.now().toString(), text: txt });
+    localStorage.setItem('cyber_extra_tasks', JSON.stringify(extraTasks));
+    input.value = '';
+    renderExtraTasks();
+  }
+
+  function completeExtraTask(id) {
+    extraTasks = extraTasks.filter(t => t.id !== id);
+    localStorage.setItem('cyber_extra_tasks', JSON.stringify(extraTasks));
+    renderExtraTasks();
+  }
+
   function handleDragStart(e) {
     draggedCard = this;
     this.classList.add('dragging');
@@ -1302,9 +1371,6 @@
     localStorage.setItem('cyber_habits', JSON.stringify(habits));
   }
 
-/* ==========================================================================
-   10. Habit Management, Subtasks & Modal Actions
-   ========================================================================== */
   function toggleSubtask(habitId, subtaskId, dateStr, e) {
     if (e) e.stopPropagation();
     const habit = habits.find(h => h.id === habitId);
@@ -1608,26 +1674,47 @@
     closeModal();
   }
 
-/* ==========================================================================
-   11. Notifications & Reminders Engine
-   ========================================================================== */
   function saveGlobalReminderTime() {
     const val = document.getElementById('global-reminder-input').value;
     globalReminderTime = val;
     localStorage.setItem('cyber_global_reminder', val);
   }
 
+  function sendSystemNotification(title, bodyText) {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then(reg => {
+        reg.showNotification(title, {
+          body: bodyText,
+          icon: 'manifest.json'
+        });
+      }).catch(() => {
+        new Notification(title, { body: bodyText });
+      });
+    } else {
+      new Notification(title, { body: bodyText });
+    }
+  }
+
   function requestNotificationPermission() {
+    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      alert('Mobile browser notifications require a secure connection (HTTPS or localhost).');
+      return;
+    }
+
     if ('Notification' in window) {
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
-          new Notification('SYSTEM_LIMIT_ // NOTIFICATIONS', { body: 'Powiadomienia aktywne!' });
+          sendSystemNotification('SYSTEM_LIMIT_ // NOTIFICATIONS', 'Notifications active!');
+        } else if (permission === 'denied') {
+          alert('Notifications permission denied. Please enable them in your browser/device settings.');
         } else {
-          alert('Brak zgody na powiadomienia.');
+          alert('Notification permission request was dismissed or rejected.');
         }
       });
     } else {
-      alert('Twoja przeglądarka nie wspiera Web Notifications.');
+      alert('Your browser or mobile system does not support Web Notifications.');
     }
   }
 
@@ -1644,9 +1731,7 @@
         sentNotifications[key] = true;
         const pendingCount = habits.filter(h => isHabitScheduledForDate(h, now) && !getHabitDayData(h.id, dateKey).done).length;
         if (pendingCount > 0) {
-          new Notification('SYSTEM_LIMIT_ // PRZYPOMNIENIE', {
-            body: `Masz jeszcze ${pendingCount} zadań do odznaczenia dzisiaj!`
-          });
+          sendSystemNotification('SYSTEM_LIMIT_ // REMINDER', `You have ${pendingCount} pending task(s) to complete today!`);
         }
       }
     }
@@ -1658,9 +1743,7 @@
           const key = `habit_${h.id}_${dateKey}_${currentHHMM}`;
           if (!sentNotifications[key]) {
             sentNotifications[key] = true;
-            new Notification(`PRZYPOMNIENIE: ${h.name}`, {
-              body: h.desc || 'Czas wykonać Twój nawyk!'
-            });
+            sendSystemNotification(`REMINDER: ${h.name}`, h.desc || 'Time to complete your habit!');
           }
         }
       }
@@ -1669,17 +1752,22 @@
 
   setInterval(checkReminders, 20000);
 
-/* ==========================================================================
-   12. Data Import, Export & Service Worker Initialization
-   ========================================================================== */
   function exportData() {
-    const data = { habits, historyStore };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `LIMIT_habit_tracker_backup_${todayStr}.json`;
-    a.click();
+    try {
+      const data = { habits, historyStore, extraTasks };
+      const jsonStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `LIMIT_habit_tracker_backup_${todayStr}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
+    } catch (err) {
+      alert('EXPORT FAILED: ' + err.message);
+    }
   }
 
   function importData() {
@@ -1696,10 +1784,14 @@
         if (data.habits && data.historyStore) {
           habits = data.habits;
           historyStore = data.historyStore;
+          if (data.extraTasks) extraTasks = data.extraTasks;
           localStorage.setItem('cyber_habits', JSON.stringify(habits));
           localStorage.setItem('cyber_history', JSON.stringify(historyStore));
+          localStorage.setItem('cyber_extra_tasks', JSON.stringify(extraTasks));
           renderHome();
           alert('DATA IMPORTED SUCCESSFULLY!');
+        } else {
+          alert('INVALID BACKUP FILE FORMAT!');
         }
       } catch (err) {
         alert('INVALID BACKUP FILE!');
@@ -1711,7 +1803,11 @@
   renderHome();
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(err => {
+        console.log('Service Worker registration failed: ', err);
+      });
+    });
   }
 </script>
 </body>
